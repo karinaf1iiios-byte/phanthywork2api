@@ -1,0 +1,14 @@
+phanthywork2api
+Copyright (C) 2026 phanthywork2api 作者
+
+本程序是自由软件：你可以依据自由软件基金会发布的 GNU Affero 通用公共许可证
+（第三版或你选择的更新版本）条款重新发布和/或修改它。
+
+本程序附带分发，希望它有用，但不提供任何担保。详见 LICENSE。
+
+本项目使用了以下第三方组件，其许可证见 THIRD-PARTY-LICENSES.md：
+
+- github.com/QuantumNous/new-api/relaykit (AGPL-3.0)  — OpenAI/Anthropic/Gemini 协议转换
+- github.com/QuantumNous/new-api/tokenkit  (AGPL-3.0)  — token 计数与估算
+- github.com/google/uuid, github.com/samber/lo, github.com/tidwall/gjson,
+  github.com/tidwall/sjson, github.com/tiktoken-go/tokenizer 等（各自许可证）

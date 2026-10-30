@@ -1,0 +1,13 @@
+# Nixpacks configuration for Coolify / Belmo deployment
+[variables]
+PORT = "3000"
+HOST = "0.0.0.0"
+
+[phases.setup]
+aptPkgs = ["curl", "wget", "ca-certificates"]
+
+[phases.build]
+cmds = ["go build -o server ./cmd/server"]
+
+[start]
+cmd = "./server -config config.example.json -listen :3000"

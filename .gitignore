@@ -1,0 +1,20 @@
+# 凭据与运行态：一律不入库
+auths/*.json
+auths/.*
+data/*.json
+data/*.lock
+data/*.log
+logs/
+config.json
+.login-verifier
+*.log
+*.pid
+
+# 构建产物
+bin/
+*.exe
+/p2a
+*.zip
+__pycache__/
+*.pyc
+.DS_Store

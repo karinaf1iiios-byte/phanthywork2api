@@ -1,0 +1,24 @@
+services:
+  phanthywork2api:
+    build: .
+    image: phanthywork2api:latest
+    container_name: phanthywork2api
+    restart: unless-stopped
+    ports:
+      - "7863:7863"
+    environment:
+      P2A_LISTEN: ":7863"
+      P2A_API_KEY: ""          # 建议设置：服务端 Bearer 密钥
+      P2A_AUTH_DIR: /app/auths
+      P2A_STATE_FILE: /app/data/state.json
+    volumes:
+      - ./auths:/app/auths          # 宿主机先 go run ./cmd/login 生成凭证再挂载
+      - ./data:/app/data
+      # 自定义配置（取消注释覆盖默认）：
+      # - ./config.json:/app/config.json:ro
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:7863/healthz"]
+      interval: 30s
+      timeout: 3s
+      start_period: 5s
+      retries: 3

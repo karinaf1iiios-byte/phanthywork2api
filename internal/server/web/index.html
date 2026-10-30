@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phanthy 账号池 · 积分看板</title>
+<link rel="stylesheet" href="./app.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">P</div>
+    <div>Phanthy Pool<small>账号池 · 积分看板</small></div>
+  </div>
+  <nav class="nav">
+    <a href="#overview" class="active">总览</a>
+    <a href="#usage">用量</a>
+    <a href="#models">模型</a>
+    <a href="#accounts">账号</a>
+    <a href="#invite">邀请</a>
+    <a href="#jobs">定时任务</a>
+  </nav>
+  <div class="spacer"></div>
+  <span class="pill" id="conn"><span class="dot" id="connDot"></span><span id="connText">连接中…</span></span>
+  <button class="btn ghost" id="btnRefresh">刷新</button>
+  <a class="btn primary" href="./login.html">+ 登录新账号</a>
+</header>
+
+<main class="wrap">
+  <div class="page-head">
+    <div>
+      <h1>积分总览</h1>
+      <p id="subline">数据来自上游 activities / usage 接口，不做本地推算</p>
+    </div>
+    <div class="spacer"></div>
+    <div class="row">
+      <button class="btn" id="btnClaim">立即签到</button>
+      <button class="btn ghost" id="btnKeepalive">续期全部 token</button>
+    </div>
+  </div>
+
+  <section id="overview" class="grid-kpi">
+    <div class="kpi accent">
+      <div class="label">可用积分合计 <span class="tip" data-tip="所有账号 credits.available 之和；套餐到期后整包作废">?</span></div>
+      <div class="value" id="kpiCredits">—</div>
+      <div class="foot" id="kpiCreditsFoot">&nbsp;</div>
+    </div>
+    <div class="kpi">
+      <div class="label">账号数</div>
+      <div class="value" id="kpiAccounts">—</div>
+      <div class="foot" id="kpiAccountsFoot">&nbsp;</div>
+    </div>
+    <div class="kpi">
+      <div class="label">今日已签到</div>
+      <div class="value" id="kpiClaimed">—</div>
+      <div class="foot" id="kpiClaimedFoot">&nbsp;</div>
+    </div>
+    <div class="kpi">
+      <div class="label">最近套餐到期</div>
+      <div class="value" id="kpiExpiry">—</div>
+      <div class="foot" id="kpiExpiryFoot">&nbsp;</div>
+    </div>
+  </section>
+
+  <section id="usage" class="card" style="margin-top:18px">
+    <div class="card-head">
+      <h2>积分消耗</h2>
+      <span class="hint" id="usageHint">按天汇总 · 柱=积分 · 折线=请求数</span>
+      <div class="spacer"></div>
+      <div class="seg" id="segDays">
+        <button data-days="7">7 天</button>
+        <button data-days="14" class="on">14 天</button>
+        <button data-days="30">30 天</button>
+      </div>
+    </div>
+    <svg class="chart" id="chart" viewBox="0 0 1000 220" preserveAspectRatio="none"></svg>
+    <div class="chart-legend">
+      <span><i style="background:var(--accent)"></i>积分消耗</span>
+      <span><i style="background:var(--ok)"></i>请求数</span>
+      <span class="muted" id="usageTotals"></span>
+    </div>
+  </section>
+
+  <section id="models" class="card">
+    <div class="card-head">
+      <h2>模型分布</h2>
+      <span class="hint">按积分占比排序，全部来自服务端 usage_by_day_and_model</span>
+    </div>
+    <div class="bars" id="bars"><div class="muted">加载中…</div></div>
+  </section>
+
+  <section id="accounts" class="card">
+    <div class="card-head">
+      <h2>账号池</h2>
+      <span class="hint">权重 = 额度 + 快过期紧迫度 + 闲置补偿；抽签决定下一次用哪个号</span>
+    </div>
+    <div style="overflow:auto">
+      <table>
+        <thead>
+        <tr>
+          <th>账号</th>
+          <th class="num">积分</th>
+          <th>套餐</th>
+          <th>今日签到</th>
+          <th>引导任务</th>
+          <th>邀请</th>
+          <th class="num">权重</th>
+          <th class="num">token 寿命</th>
+          <th>状态</th>
+        </tr>
+        </thead>
+        <tbody id="acctBody">
+          <tr><td colspan="9" class="muted">加载中…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="invite" class="card">
+    <div class="card-head">
+      <h2>邀请入口</h2>
+      <span class="hint">关系只在注册表单提交那一刻建立；已建好的号事后补填永久 409</span>
+    </div>
+    <div id="inviteBody" class="muted">加载中…</div>
+    <div class="row-actions" style="margin-top:14px">
+      <button class="btn ghost" id="btnInviteNew">重新挑邀请人</button>
+      <span class="hint" id="inviteFoot"></span>
+    </div>
+  </section>
+
+  <section id="jobs" class="card">
+    <div class="card-head">
+      <h2>定时任务</h2>
+      <span class="hint">由 config.schedule.jobs 驱动，跑在网关进程里；「立即运行」是同一套逻辑</span>
+    </div>
+    <div style="overflow:auto">
+      <table>
+        <thead>
+        <tr>
+          <th>任务</th>
+          <th>计划</th>
+          <th>下次</th>
+          <th>上次</th>
+          <th class="num">耗时</th>
+          <th>结果</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody id="jobBody">
+          <tr><td colspan="7" class="muted">加载中…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <pre class="job-tail" id="jobTail" style="display:none"></pre>
+  </section>
+
+  <p class="muted" style="margin-top:18px" id="footNote">
+    看板默认只允许本机（回环/内网）访问；要远程看就在 config.json 里设 <code>ui.access_token</code>，地址加 <code>?token=…</code>。
+  </p>
+</main>
+
+<script src="./app.js"></script>
+</body>
+</html>

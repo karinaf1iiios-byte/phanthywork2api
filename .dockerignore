@@ -1,0 +1,7 @@
+auths
+data
+*.json.tmp
+.login-verifier
+docs
+scripts.zip
+.git

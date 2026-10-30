@@ -1,0 +1,130 @@
+{
+  "listen": ":7863",
+  "api_key": "",
+  "auth_dir": "./auths",
+  "state_file": "./data/state.json",
+  "base_url": "https://code.phanthy.com",
+  "schedule": {
+    "jobs": [
+      {
+        "name": "invite",
+        "cmd": "invite",
+        "hours": [
+          8,
+          20
+        ],
+        "minute": 50,
+        "enabled": true
+      },
+      {
+        "name": "claim",
+        "cmd": "claim",
+        "hours": [
+          9,
+          21
+        ],
+        "minute": 0,
+        "enabled": true
+      },
+      {
+        "name": "verify",
+        "cmd": "verify",
+        "hours": [
+          9,
+          21
+        ],
+        "minute": 30,
+        "enabled": true
+      },
+      {
+        "name": "sweep",
+        "cmd": "sweep --apply",
+        "hours": [
+          9,
+          21
+        ],
+        "minute": 40,
+        "enabled": true
+      }
+    ],
+    "keepalive_enabled": true,
+    "keepalive_hours": [
+      22
+    ],
+    "keepalive_interval_seconds": 60,
+    "keepalive_threshold_seconds": 600,
+    "claim_enabled": false,
+    "claim_hours": [
+      9,
+      21
+    ],
+    "onboarding_enabled": true,
+    "onboarding_hours": [
+      10
+    ]
+  },
+  "upstream": {
+    "timeout_seconds": 120,
+    "user_agent": "claude-cli/2.1.92 (external, cli)",
+    "default_model": "phanthy-pro",
+    "strict_models": false,
+    "reasoning_only": "promote"
+  },
+  "session": {
+    "sticky_ttl_seconds": 7200,
+    "max_bindings": 20000,
+    "state_file": "./data/sessions.json"
+  },
+  "cache": {
+    "disabled": false,
+    "relocate_system": false,
+    "system_inline_bytes": 4096
+  },
+  "sanitize": {
+    "disabled": false,
+    "keep_billing_header": false,
+    "extra_rewrites": [],
+    "extra_strip": []
+  },
+  "cooldown": {
+    "hard_credit": "12h",
+    "soft_rate": "60s",
+    "err_threshold": 3,
+    "err_cooldown": "10m"
+  },
+  "models": {
+    "Phanthy-fast": "Phanthy-fast",
+    "Phanthy-pro": "Phanthy-pro",
+    "Phanthy-ultra": "Phanthy-ultra",
+    "glm-5.3-flash": "glm-5.3-flash",
+    "glm-5.3": "glm-5.3",
+    "glm-5.2": "glm-5.2",
+    "kimi-k3": "kimi-k3",
+    "kimi-k2.7-code": "kimi-k2.7-code",
+    "deepseek-v4.1-flash-1017": "deepseek-v4.1-flash-1017",
+    "Phana-5.5o": "Phana-5.5o",
+    "Phana-5.5s": "Phana-5.5s",
+    "Phano-6a": "Phano-6a",
+    "Phano-6.1s": "Phano-6.1s",
+    "claude-sonnet-4-6": "phanthy-pro",
+    "claude-sonnet-4-5": "phanthy-pro",
+    "claude-opus-4-8": "phanthy-pro",
+    "claude-opus-4-7": "phanthy-pro",
+    "gpt-4o": "phanthy-pro",
+    "gpt-4o-mini": "phanthy-pro"
+  },
+  "identity": {
+    "device_scope": "account",
+    "claim_jitter_seconds": 20
+  },
+  "pool": {
+    "idle_weight_per_hour": 0.5,
+    "idle_weight_max": 5.0,
+    "expiring_weight": 20.0,
+    "expiry_window_days": 3.0
+  },
+  "ui": {
+    "enabled": true,
+    "access_token": ""
+  }
+}
