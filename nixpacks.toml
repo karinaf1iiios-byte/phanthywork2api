@@ -2,6 +2,8 @@
 [variables]
 PORT = "3000"
 HOST = "0.0.0.0"
+CGO_ENABLED = "0"
+GOPROXY = "https://proxy.golang.org,direct"
 
 [phases.setup]
 aptPkgs = ["curl", "wget", "ca-certificates"]

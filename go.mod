@@ -2,6 +2,8 @@ module phanthywork2api
 
 go 1.26
 
+toolchain go1.26.2
+
 require (
 	github.com/QuantumNous/new-api/relaykit v0.3.5
 	github.com/QuantumNous/new-api/tokenkit v0.0.0-20261028052032-49271d2d8b5f
